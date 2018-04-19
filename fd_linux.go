@@ -16,6 +16,7 @@ type fd interface {
 	Getsockname() (unix.Sockaddr, error)
 	Listen(n int) error
 	NewFile(name string) *os.File
+	SetNonblock() error
 }
 
 var _ fd = &sysFD{}
@@ -41,3 +42,4 @@ func (fd *sysFD) Connect(sa unix.Sockaddr) error      { return unix.Connect(fd.f
 func (fd *sysFD) Listen(n int) error                  { return unix.Listen(fd.fd, n) }
 func (fd *sysFD) NewFile(name string) *os.File        { return os.NewFile(uintptr(fd.fd), name) }
 func (fd *sysFD) Getsockname() (unix.Sockaddr, error) { return unix.Getsockname(fd.fd) }
+func (fd *sysFD) SetNonblock() error                  { return unix.SetNonblock(fd.fd, true) }

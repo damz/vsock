@@ -10,6 +10,8 @@ For more information about VM sockets, check out my blog about
 Requirements
 ------------
 
+Go 1.11+, which is the first version that allows new socket types to be properly implemented, and support deadlines and close-unblocks-reads semantics.
+
 To make use of VM sockets with QEMU and virtio-vsock, you must have:
   - a Linux hypervisor with kernel 4.8+
   - a Linux virtual machine on that hypervisor with kernel 4.8+

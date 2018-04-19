@@ -64,6 +64,7 @@ func Test_dialStreamLinuxFull(t *testing.T) {
 		return nil
 	}
 
+	var setNonBlock bool
 	lfd := &testFD{
 		connect: connectFn,
 		getsockname: func() (unix.Sockaddr, error) {
@@ -72,11 +73,19 @@ func Test_dialStreamLinuxFull(t *testing.T) {
 		newFile: func(name string) *os.File {
 			return os.NewFile(localFD, name)
 		},
+		setnonblock: func() error {
+			setNonBlock = true
+			return nil
+		},
 	}
 
 	nc, err := dialStreamLinux(lfd, remoteCID, remotePort)
 	if err != nil {
 		t.Fatalf("failed to dial: %v", err)
+	}
+
+	if !setNonBlock {
+		t.Fatal("not set in non-blocking mode")
 	}
 
 	c := nc.(*conn)
